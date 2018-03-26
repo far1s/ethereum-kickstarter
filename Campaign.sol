@@ -6,7 +6,7 @@ contract Campaign {
         uint value;
         address recipient;
         bool complete;
-        // amount of personen which votes with "yes"
+        // amount of persons which voted with "yes"
         uint approvalCount;
         // mapping of addresses with vote "yes"
         mapping(address => bool) approvals;
@@ -16,6 +16,7 @@ contract Campaign {
     address public manager;
     uint public minimumContribution;
     mapping(address => bool) public approvers;
+    uint public approversCount;
 
     modifier restricted() {
         require(msg.sender == manager);
@@ -32,6 +33,7 @@ contract Campaign {
 
         // approvers.push(msg.sender);
         approvers[msg.sender] = true;
+        approversCount++;
     }
 
     function createRequest(
@@ -62,5 +64,18 @@ contract Campaign {
 
         request.approvals[msg.sender] = true;
         request.approvalCount++;
+    }
+
+    function finalizeRequest(uint requestIndex) public restricted {
+        // save storage variable in local variable
+        Request storage request = requests[requestIndex];
+        // check if there are enough approvers
+        require((approversCount / 2) < request.approvalCount);
+        // check if request is not completed yet
+        require(!request.complete);
+        // transfer ether to recipient
+        request.recipient.transfer(request.value);
+        // mark request as complete
+        request.complete = true;
     }
 }
