@@ -14,8 +14,8 @@ let campaign;
 beforeEach(async () => {
     accounts = await web3.eth.getAccounts();
 
-    factory = await new web3.eth.Contrac(JSON.parse(compiledFactory.interface))
-        .deploy({ data: compiledFactory.biteCode })
+    factory = await new web3.eth.Contract(JSON.parse(compiledFactory.interface))
+        .deploy({ data: compiledFactory.bytecode })
         .send({ from: accounts[0], gas: '1000000' });
 
     await factory.methods.createCampaign('100').send({
@@ -32,3 +32,9 @@ beforeEach(async () => {
     );
 });
 
+describe('Campaigns', () => {
+    it('deploys a factory and a campaign', () => {
+        assert.ok(factory.options.address);
+        assert.ok(campaign.options.address);
+    });
+});
