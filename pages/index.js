@@ -1,5 +1,10 @@
 import React from 'react';
+import {
+    Card,
+    Button
+} from 'semantic-ui-react';
 import factory from '../ethereum/factory';
+import Layout from '../components/Layout';
 
 export default class CampaignIndex extends React.Component {
     /**
@@ -9,13 +14,37 @@ export default class CampaignIndex extends React.Component {
      * instance. Next requires this function.
     */
     static async getInitialProps() {
-        const campaings = await factory.methods.getDeployedCampaigns().call();
+        const campaigns = await factory.methods.getDeployedCampaigns().call();
         return {
-            campaings
+            campaigns
         }
     }
 
+    renderCampaigns = () => {
+        const { campaigns } = this.props;
+        const items = campaigns && campaigns.map(address => {
+            return {
+                header: address,
+                description: <a>View Campaign</a>,
+                fluid: true
+            };
+        });
+        return <Card.Group items={items}/>
+    }
+
     render() {
-        return <div>{this.props.campaings[0]}</div>;
+        return (
+            <Layout>
+                <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"></link>
+                <h3>Open Campaigns</h3>
+                <Button
+                    floated="right"
+                    content="Create Campaigns"
+                    icon="add circle"
+                    primary
+                />
+                {this.renderCampaigns()}
+            </Layout>
+        );
     }
 }
