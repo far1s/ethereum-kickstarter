@@ -8,6 +8,7 @@ import {
 import Layout from '../../components/Layout';
 import factory from '../../ethereum/factory';
 import web3 from '../../ethereum/web3';
+import { Router } from '../../routes';
 
 export default class CampaignNew extends React.Component {
     state = {
@@ -31,6 +32,7 @@ export default class CampaignNew extends React.Component {
                 from: accounts[0]
                 // metamask calculates gas automatically
             });
+            Router.pushRoute('/');
         } catch (error) {
             this.setState({
                 errorMessage: error.message,

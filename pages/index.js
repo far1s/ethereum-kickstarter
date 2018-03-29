@@ -5,6 +5,7 @@ import {
 } from 'semantic-ui-react';
 import factory from '../ethereum/factory';
 import Layout from '../components/Layout';
+import { Link } from '../routes';
 
 export default class CampaignIndex extends React.Component {
     /**
@@ -25,7 +26,11 @@ export default class CampaignIndex extends React.Component {
         const items = campaigns && campaigns.map(address => {
             return {
                 header: address,
-                description: <a>View Campaign</a>,
+                description: (
+                    <Link route={`/campaigns/${address}`}>
+                        <a>View Campaign</a>
+                    </Link>
+                ),
                 fluid: true
             };
         });
@@ -36,12 +41,16 @@ export default class CampaignIndex extends React.Component {
         return (
             <Layout>
                 <h3>Open Campaigns</h3>
-                <Button
-                    floated="right"
-                    content="Create Campaigns"
-                    icon="add circle"
-                    primary
-                />
+                <Link route="campaigns/new">
+                    <a>
+                        <Button
+                            floated="right"
+                            content="Create Campaigns"
+                            icon="add circle"
+                            primary
+                        />
+                    </a>
+                </Link>
                 {this.renderCampaigns()}
             </Layout>
         );
