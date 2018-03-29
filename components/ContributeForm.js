@@ -1,0 +1,52 @@
+import React from 'react';
+import {
+    Form,
+    Input,
+    Message,
+    Button,
+} from 'semantic-ui-react';
+import Campaign from '../ethereum/campaign';
+import web3 from '../ethereum/web3';
+
+export default class ContributeFrom extends React.Component {
+    state = {
+        value: '',
+        loading: false,
+    }
+
+    handleSubmit = async (event) => {
+        event.preventDefault();
+        this.setState({ loading: true });
+        const campaign = Campaign(this.props.campaignAddress);
+        try {
+            const accounts = await web3.eth.getAccounts();
+            await campaign.methods.contribute().send({
+                from: accounts[0],
+                value: web3.utils.toWei(this.state.value, 'ether')
+            });
+        } catch (error) {
+
+        }
+    }
+
+    render() {
+        return (
+            <Form onSubmit={this.handleSubmit}>
+                <Form.Field>
+                    <label>Amount to Contribute</label>
+                    <Input
+                        label="ether"
+                        labelPosition="right"
+                        value={this.state.value}
+                        onChange={(event) => this.setState({
+                            value: event.target.value
+                        })}
+                    />
+                </Form.Field>
+                <Button primary>
+                    Contribute!
+                </Button>
+            </Form>
+        );
+    }
+}
