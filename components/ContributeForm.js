@@ -7,16 +7,21 @@ import {
 } from 'semantic-ui-react';
 import Campaign from '../ethereum/campaign';
 import web3 from '../ethereum/web3';
+import { Router } from '../routes';
 
 export default class ContributeFrom extends React.Component {
     state = {
         value: '',
+        errorMessage: '',
         loading: false,
     }
 
     handleSubmit = async (event) => {
         event.preventDefault();
-        this.setState({ loading: true });
+        this.setState({
+            loading: true,
+            errorMessage: ''
+        });
         const campaign = Campaign(this.props.campaignAddress);
         try {
             const accounts = await web3.eth.getAccounts();
@@ -24,14 +29,23 @@ export default class ContributeFrom extends React.Component {
                 from: accounts[0],
                 value: web3.utils.toWei(this.state.value, 'ether')
             });
+            // refresh the page when transaction finished
+            Router.replaceRoute(`/campaigns/${this.props.campaignAddress}`);
         } catch (error) {
-
+            this.setState({ errorMessage: error.message });
         }
+        this.setState({
+            value: '',
+            loading: false
+        });
     }
 
     render() {
         return (
-            <Form onSubmit={this.handleSubmit}>
+            <Form
+                onSubmit={this.handleSubmit}
+                error={!!this.state.errorMessage}
+            >
                 <Form.Field>
                     <label>Amount to Contribute</label>
                     <Input
@@ -43,7 +57,15 @@ export default class ContributeFrom extends React.Component {
                         })}
                     />
                 </Form.Field>
-                <Button primary>
+                <Message
+                    error
+                    header="Oops!"
+                    content={this.state.errorMessage}
+                />
+                <Button
+                    primary
+                    loading={this.state.loading}
+                >
                     Contribute!
                 </Button>
             </Form>
