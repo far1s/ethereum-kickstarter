@@ -48,7 +48,7 @@ export default class RequestIndex extends React.Component {
             ).send({
                 from: accounts[0]
             });
-            Router.pushRoute(`/campaigns/${campaignAddress}/`)
+            Router.pushRoute(`/campaigns/${campaignAddress}/requests`)
         } catch (error) {
             this.setState({ errorMessage: error.message });
         }

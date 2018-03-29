@@ -50,6 +50,15 @@ export default class RequestIndex extends React.Component {
         return (
             <Layout>
                 <h3>Requests</h3>
+                <Link route={`/campaigns/${this.props.campaignAddress}/requests/new`}>
+                    <a>
+                        <Button
+                            primary
+                            floated="right"
+                            style={{ marginBottom: '10px' }}
+                        >Add Request</Button>
+                    </a>
+                </Link>
                 <Table>
                     <Header>
                         <Row>
@@ -66,11 +75,7 @@ export default class RequestIndex extends React.Component {
                         {this.renderRow()}
                     </Body>
                 </Table>
-                <Link route={`/campaigns/${this.props.campaignAddress}/requests/new`}>
-                    <a>
-                        <Button primary>Add Request</Button>
-                    </a>
-                </Link>
+                <div>Fround {this.props.requestCount} requests</div>
             </Layout>
         );
     }
