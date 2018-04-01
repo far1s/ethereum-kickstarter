@@ -2,4 +2,3 @@ node_modules
 package-lock.json
 ethereum/build
 ADDRESS
-.next
